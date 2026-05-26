@@ -38,6 +38,14 @@ const config = {
     checkIntervalMs: 30 * 60 * 1000, // 30 min
   },
 
+  // Changelog settings.
+  changelog: {
+    // Path relative to the game install dir where changelog files live.
+    dir: 'UBBA_data/changelogs',
+    // Index file listing all versions.
+    index: 'changelog.md',
+  },
+
   // Game launch settings.
   game: {
     // Executable name expected to live in the Dawn of War install directory

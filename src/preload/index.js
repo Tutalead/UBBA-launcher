@@ -24,6 +24,8 @@ const CH = Object.freeze({
   GAME_LAUNCH: 'game:launch',
   APP_GET_VERSION: 'app:get-version',
   APP_OPEN_LOGS: 'app:open-logs',
+  CHANGELOG_GET: 'changelog:get',
+  OPEN_URL: 'app:open-url',
 });
 
 function on(channel, listener) {
@@ -57,6 +59,10 @@ const api = {
   },
   game: {
     launch: () => ipcRenderer.invoke(CH.GAME_LAUNCH),
+  },
+  changelog: {
+    get: () => ipcRenderer.invoke(CH.CHANGELOG_GET),
+    openUrl: (url) => ipcRenderer.invoke(CH.OPEN_URL, url),
   },
 };
 

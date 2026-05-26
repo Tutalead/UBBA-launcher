@@ -28,4 +28,8 @@ module.exports = Object.freeze({
   // Misc
   APP_GET_VERSION: 'app:get-version',
   APP_OPEN_LOGS: 'app:open-logs',
+
+  // Changelog
+  CHANGELOG_GET: 'changelog:get',
+  OPEN_URL: 'app:open-url',
 });

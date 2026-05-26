@@ -10,6 +10,7 @@ const { configureLogger, log } = require('../shared/logger');
 const LauncherUpdater = require('./updater/launcher-updater');
 const ModUpdater = require('./updater/mod-updater');
 const { launchGame } = require('./game-launcher');
+const { getChangelog } = require('./changelog');
 
 // Single-instance lock.
 if (!app.requestSingleInstanceLock()) {
@@ -116,12 +117,24 @@ function registerIpc() {
   );
   ipcMain.handle(CH.APP_GET_VERSION, () => app.getVersion());
   ipcMain.handle(CH.APP_OPEN_LOGS, () => shell.openPath(app.getPath('logs')));
+  ipcMain.handle(CH.OPEN_URL, (_e, url) => {
+    // Only allow https: URLs to external sites.
+    if (typeof url === 'string' && /^https:/.test(url)) {
+      return shell.openExternal(url);
+    }
+  });
 
   ipcMain.handle(CH.MOD_CHECK, () => modUpdater.check());
   ipcMain.handle(CH.MOD_UPDATE, () => modUpdater.update());
   ipcMain.handle(CH.MOD_STATUS, () => modUpdater.status());
 
   ipcMain.handle(CH.GAME_LAUNCH, () => launchGame(config.game));
+
+  ipcMain.handle(CH.CHANGELOG_GET, () => {
+    const gameDir = require('./game-launcher').findGameDir(config.game.executable);
+    if (!gameDir) return { entries: [], error: 'Game directory not found.' };
+    return getChangelog({ gameDir, changelogConfig: config.changelog });
+  });
 
   // Window controls — driven from the custom titlebar.
   ipcMain.handle(CH.WINDOW_MINIMIZE, () => mainWindow && mainWindow.minimize());
