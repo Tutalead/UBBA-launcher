@@ -7,8 +7,8 @@ export default function TitleBar({ title = 'UBBA LAUNCHER by NinjaCat' }) {
 
   return (
     <div
-      className="h-8 shrink-0 flex items-center justify-between bg-ink-900/95 border-b border-black/70 select-none"
-      style={{ WebkitAppRegion: 'drag' }}
+      className="h-8 shrink-0 flex items-center justify-between border-b border-white/5 select-none"
+      style={{ WebkitAppRegion: 'drag', background: 'linear-gradient(to bottom, rgba(20,8,3,0.90) 0%, rgba(20,8,3,0.60) 100%)' }}
     >
       <div className="flex items-center gap-2 px-3">
         <span className="gothic text-[11px] tracking-[0.25em] text-brass-300">

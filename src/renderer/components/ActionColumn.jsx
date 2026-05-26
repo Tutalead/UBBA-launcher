@@ -67,11 +67,10 @@ export default function ActionColumn() {
         </div>
         <Button
           variant="primary"
-          className="h-20 px-10 text-2xl leading-none shrink-0"
+          className="h-20 w-40 text-2xl leading-none shrink-0"
           disabled={!isReady}
           onClick={isReady ? installLauncher : undefined}
         >
-          {isReady ? 'Restart' : isDownloading ? 'Updating…' : 'Update'}
         </Button>
       </div>
     );
@@ -89,7 +88,7 @@ export default function ActionColumn() {
       </div>
       <Button
         variant="primary"
-        className="h-20 px-10 text-2xl leading-none shrink-0"
+        className="h-20 w-40 text-2xl leading-none shrink-0"
         disabled={launching || modBusy}
         onClick={mod.hasUpdate ? handleModClick : handlePlay}
       >

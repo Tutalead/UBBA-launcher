@@ -29,7 +29,7 @@ const ICONS = {
 
 export default function Sidebar({ items, active, onSelect }) {
   return (
-    <nav className="w-28 shrink-0 border-r border-white/5 flex flex-col py-3 gap-2 m-auto">
+    <nav className="w-28 shrink-0 border-r border-white/5 flex flex-col py-3 gap-2 m-auto" style={{background: 'linear-gradient(to right, rgba(20,8,3,0.72) 0%, rgba(20,8,3,0.45) 100%)'}}>
       {items.map((item) => (
         <SidebarTab
           key={item.key}

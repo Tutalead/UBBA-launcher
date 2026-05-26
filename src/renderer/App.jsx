@@ -26,7 +26,7 @@ export default function App() {
   const Page = PAGES[active].component;
 
   return (
-    <div className="h-full w-full flex flex-col bg-ink-900">
+    <div className="h-full w-full flex flex-col" style={{background: 'radial-gradient(ellipse at 60% 40%, #2a1208 0%, #180c06 40%, #0b0a09 100%)'}}>
       <TitleBar />
       <div className="flex-1 min-h-0">
         <Frame>
