@@ -6,6 +6,10 @@
   "author": "UBBA",
   "license": "UNLICENSED",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Tutalead/UBBA-launcher.git"
+  },
   "scripts": {
     "dev:renderer": "vite",
     "dev:electron": "wait-on http://localhost:5173 && cross-env VITE_DEV_SERVER_URL=http://localhost:5173 electron .",
@@ -85,9 +89,10 @@
     },
     "publish": [
       {
-        "provider": "generic",
-        "url": "https://updates.example.com/launcher/${os}/${arch}",
-        "channel": "latest"
+        "provider": "github",
+        "owner": "Tutalead",
+        "repo": "UBBA-launcher",
+        "releaseType": "release"
       }
     ]
   }

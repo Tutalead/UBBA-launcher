@@ -8,12 +8,10 @@ const ENV = process.env.UBBA_ENV || 'production';
 const config = {
   env: ENV,
 
-  // Launcher self-update feed (consumed by electron-updater).
-  // electron-builder's `publish` block in package.json also drives this,
-  // but we expose values here for diagnostics / overrides.
+  // Launcher self-update settings. The actual feed (GitHub Releases) is
+  // baked into `app-update.yml` at build time from package.json `build.publish`.
+  // Values here only control runtime behaviour of `electron-updater`.
   launcherUpdate: {
-    provider: 'generic',
-    url: process.env.UBBA_LAUNCHER_FEED || 'https://updates.example.com/launcher',
     channel: process.env.UBBA_LAUNCHER_CHANNEL || 'latest',
     autoDownload: true,
     autoInstallOnAppQuit: true,

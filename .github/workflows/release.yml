@@ -1,0 +1,35 @@
+name: release
+
+# Publish a Windows build to GitHub Releases whenever a `v*` tag is pushed.
+# The tag's numeric portion must match `version` in package.json.
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build & publish (electron-builder)
+        env:
+          # electron-updater + electron-builder read this to upload assets and
+          # the matching `latest.yml` to the GitHub release for this tag.
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run publish
