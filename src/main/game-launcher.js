@@ -8,23 +8,27 @@ const path = require('path');
 const { log } = require('../shared/logger');
 
 // Resolve the Dawn of War install directory.
-//   - In dev, the launcher source lives at `<DoW>/UBBA-launcher`, so the
-//     game dir is the parent of the project (`..`).
-//   - In prod, the packaged launcher is installed directly into the DoW
-//     folder, so the game dir is the directory containing the launcher
-//     executable (`.`).
-// We still verify the executable is actually present at the chosen path
-// and return null otherwise so callers can surface a clear error.
+// In dev the source lives at `<DoW>/UBBA-launcher/` so `../` is the game dir.
+// In prod the NSIS installer puts the launcher in a sub-folder of the DoW
+// directory (e.g. `<DoW>/UBBA Launcher/`), so we check the exe dir first
+// and then its parent — whichever contains the game executable wins.
 function findGameDir(executable) {
-  const base = app.isPackaged
-    ? path.dirname(app.getPath('exe'))                // prod: ./
-    : path.resolve(app.getAppPath(), '..');           // dev:  ../
-  try {
-    if (fs.existsSync(path.join(base, executable))) return base;
-  } catch {
-    // fall through
+  const exeDir = app.isPackaged
+    ? path.dirname(app.getPath('exe'))
+    : path.resolve(app.getAppPath(), '..');
+
+  const candidates = app.isPackaged
+    ? [exeDir, path.resolve(exeDir, '..')]
+    : [exeDir];
+
+  for (const dir of candidates) {
+    try {
+      if (fs.existsSync(path.join(dir, executable))) return dir;
+    } catch {
+      // continue
+    }
   }
-  log.warn('[game] executable not found at expected dir', { base, executable });
+  log.warn('[game] executable not found near launcher', { candidates, executable });
   return null;
 }
 
