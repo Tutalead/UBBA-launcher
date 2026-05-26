@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <!--
+      CSP: in production all assets are local. In dev, Vite needs ws: and
+      inline styles for HMR + style injection. We allow both so a single
+      policy works for both modes.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' ws: http://localhost:* http://127.0.0.1:*"
+    />
+    <title>UBBA Launcher</title>
+  </head>
+  <body class="bg-ink-900 text-bone-100 select-none overflow-hidden">
+    <div id="root" class="h-screen w-screen"></div>
+    <script type="module" src="./main.jsx"></script>
+  </body>
+</html>

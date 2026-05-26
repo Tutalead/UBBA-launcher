@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+    width: 100%;
+  }
+  body {
+    font-family: theme('fontFamily.sans');
+  }
+}
+
+@layer components {
+  /* Stylized "etched metal" plate used for cards and panels. */
+  .plate {
+    @apply bg-metal-plate shadow-plate border border-black/60 rounded-sm;
+  }
+  .rivet {
+    @apply w-2 h-2 rounded-full bg-brass-500/70 shadow-rivet;
+  }
+  .gothic {
+    font-family: theme('fontFamily.gothic');
+    letter-spacing: 0.08em;
+  }
+}
