@@ -91,6 +91,7 @@
     "nsis": {
       "oneClick": false,
       "perMachine": false,
+      "multiUserInstallation": false,
       "allowToChangeInstallationDirectory": true,
       "deleteAppDataOnUninstall": false,
       "createDesktopShortcut": true,
