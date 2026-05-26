@@ -1,6 +1,6 @@
 {
   "name": "ubba-launcher",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "UBBA game launcher with self-update",
   "main": "src/main/index.js",
   "author": "UBBA",
