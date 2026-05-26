@@ -84,7 +84,7 @@ export default function ActionColumn() {
             {label}
           </span>
         </div>
-        <ProgressLabel value={Math.round(progress)} indeterminate={indeterminate} />
+        {modBusy && <ProgressLabel value={Math.round(progress)} indeterminate={indeterminate} />}
       </div>
       <Button
         variant="primary"
