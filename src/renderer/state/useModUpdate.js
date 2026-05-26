@@ -23,8 +23,8 @@ export function useModUpdate() {
         latestVersion: s.latestVersion,
         hasUpdate: !!s.hasUpdate,
         message: s.installedVersion
-          ? `Installed mod v${s.installedVersion}`
-          : 'Mod not installed',
+          ? `Installed addon v${s.installedVersion}`
+          : 'Addon not installed',
       }));
     }).catch(() => {});
   }, []);

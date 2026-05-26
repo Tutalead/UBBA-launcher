@@ -2,7 +2,7 @@ import { useWindowState } from '../state/useWindowState.js';
 
 // Custom titlebar: the bar itself is draggable; the icon buttons opt out of
 // the drag region via the `no-drag` class so they can receive clicks.
-export default function TitleBar({ title = 'UBBA Launcher' }) {
+export default function TitleBar({ title = 'UBBA LAUNCHER by NinjaCat' }) {
   const { close } = useWindowState();
 
   return (
@@ -11,7 +11,7 @@ export default function TitleBar({ title = 'UBBA Launcher' }) {
       style={{ WebkitAppRegion: 'drag' }}
     >
       <div className="flex items-center gap-2 px-3">
-        <span className="gothic uppercase text-[11px] tracking-[0.25em] text-brass-300">
+        <span className="gothic text-[11px] tracking-[0.25em] text-brass-300">
           {title}
         </span>
       </div>
