@@ -71,6 +71,7 @@ export default function ActionColumn() {
           disabled={!isReady}
           onClick={isReady ? installLauncher : undefined}
         >
+          {isReady ? 'Restart' : isDownloading ? 'Updating…' : 'Update'}
         </Button>
       </div>
     );
