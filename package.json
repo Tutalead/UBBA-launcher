@@ -3,7 +3,10 @@
   "version": "0.1.3",
   "description": "UBBA game launcher with self-update",
   "main": "src/main/index.js",
-  "author": "UBBA",
+  "author": {
+    "name": "Tutalead",
+    "url": "https://github.com/Tutalead"
+  },
   "license": "UNLICENSED",
   "private": true,
   "repository": {
@@ -43,8 +46,9 @@
     "wait-on": "^7.2.0"
   },
   "build": {
-    "appId": "com.ubba.launcher",
+    "appId": "com.tutalead.ubba-launcher",
     "productName": "UBBA Launcher",
+    "copyright": "Copyright © 2026 Tutalead",
     "asar": true,
     "directories": {
       "output": "dist",
@@ -85,7 +89,10 @@
       "oneClick": false,
       "perMachine": false,
       "allowToChangeInstallationDirectory": true,
-      "deleteAppDataOnUninstall": false
+      "deleteAppDataOnUninstall": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "UBBA Launcher"
     },
     "publish": [
       {
