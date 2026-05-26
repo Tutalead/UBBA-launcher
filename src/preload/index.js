@@ -13,6 +13,10 @@ const CH = Object.freeze({
   LAUNCHER_DOWNLOAD: 'launcher:download-update',
   LAUNCHER_QUIT_AND_INSTALL: 'launcher:quit-and-install',
   LAUNCHER_EVENT: 'launcher:event',
+  MOD_CHECK: 'mod:check-update',
+  MOD_UPDATE: 'mod:install-update',
+  MOD_STATUS: 'mod:get-status',
+  MOD_EVENT: 'mod:event',
   WINDOW_MINIMIZE: 'window:minimize',
   WINDOW_TOGGLE_MAXIMIZE: 'window:toggle-maximize',
   WINDOW_CLOSE: 'window:close',
@@ -38,6 +42,12 @@ const api = {
     download: () => ipcRenderer.invoke(CH.LAUNCHER_DOWNLOAD),
     quitAndInstall: () => ipcRenderer.invoke(CH.LAUNCHER_QUIT_AND_INSTALL),
     onEvent: (cb) => on(CH.LAUNCHER_EVENT, cb),
+  },
+  mod: {
+    check: () => ipcRenderer.invoke(CH.MOD_CHECK),
+    update: () => ipcRenderer.invoke(CH.MOD_UPDATE),
+    status: () => ipcRenderer.invoke(CH.MOD_STATUS),
+    onEvent: (cb) => on(CH.MOD_EVENT, cb),
   },
   window: {
     minimize: () => ipcRenderer.invoke(CH.WINDOW_MINIMIZE),

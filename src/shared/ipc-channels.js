@@ -10,6 +10,12 @@ module.exports = Object.freeze({
   LAUNCHER_QUIT_AND_INSTALL: 'launcher:quit-and-install',
   LAUNCHER_EVENT: 'launcher:event', // main -> renderer status stream
 
+  // Mod (addon) update
+  MOD_CHECK: 'mod:check-update',
+  MOD_UPDATE: 'mod:install-update',
+  MOD_STATUS: 'mod:get-status',
+  MOD_EVENT: 'mod:event', // main -> renderer status stream
+
   // Window controls (custom titlebar)
   WINDOW_MINIMIZE: 'window:minimize',
   WINDOW_TOGGLE_MAXIMIZE: 'window:toggle-maximize',

@@ -8,6 +8,7 @@ const CH = require('../shared/ipc-channels');
 const { configureLogger, log } = require('../shared/logger');
 
 const LauncherUpdater = require('./updater/launcher-updater');
+const ModUpdater = require('./updater/mod-updater');
 const { launchGame } = require('./game-launcher');
 
 // Single-instance lock.
@@ -25,6 +26,8 @@ const isDev = !!DEV_URL;
 let mainWindow = null;
 /** @type {LauncherUpdater} */
 let launcherUpdater;
+/** @type {ModUpdater} */
+let modUpdater;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -114,6 +117,10 @@ function registerIpc() {
   ipcMain.handle(CH.APP_GET_VERSION, () => app.getVersion());
   ipcMain.handle(CH.APP_OPEN_LOGS, () => shell.openPath(app.getPath('logs')));
 
+  ipcMain.handle(CH.MOD_CHECK, () => modUpdater.check());
+  ipcMain.handle(CH.MOD_UPDATE, () => modUpdater.update());
+  ipcMain.handle(CH.MOD_STATUS, () => modUpdater.status());
+
   ipcMain.handle(CH.GAME_LAUNCH, () => launchGame(config.game));
 
   // Window controls — driven from the custom titlebar.
@@ -147,9 +154,16 @@ app.whenReady().then(() => {
   Menu.setApplicationMenu(null);
 
   launcherUpdater = new LauncherUpdater({ config: config.launcherUpdate, log });
+  modUpdater = new ModUpdater({
+    config: config.modUpdate,
+    gameConfig: config.game,
+    log,
+  });
   registerIpc();
   createWindow();
   launcherUpdater.on('event', (e) => broadcast(CH.LAUNCHER_EVENT, e));
+  modUpdater.on('event', (e) => broadcast(CH.MOD_EVENT, e));
   // Self-update checks are skipped in dev — the unsigned dev build can't update itself.
   if (!isDev) launcherUpdater.startAutoCheck();
+  modUpdater.startAutoCheck();
 });

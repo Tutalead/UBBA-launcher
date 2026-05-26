@@ -21,7 +21,8 @@
   },
   "dependencies": {
     "electron-log": "^5.1.2",
-    "electron-updater": "^6.2.1"
+    "electron-updater": "^6.2.1",
+    "extract-zip": "^2.0.1"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.1",
@@ -53,14 +54,27 @@
       "package.json"
     ],
     "win": {
-      "target": [{ "target": "nsis", "arch": ["x64"] }]
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
     },
     "mac": {
-      "target": ["dmg", "zip"],
+      "target": [
+        "dmg",
+        "zip"
+      ],
       "category": "public.app-category.games"
     },
     "linux": {
-      "target": ["AppImage", "deb"],
+      "target": [
+        "AppImage",
+        "deb"
+      ],
       "category": "Game"
     },
     "nsis": {
