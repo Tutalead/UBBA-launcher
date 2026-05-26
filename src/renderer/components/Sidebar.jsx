@@ -18,13 +18,6 @@ const ICONS = {
       <path d="M10 3h4v3a2 2 0 1 0 4 0V3h3v4h-3a2 2 0 1 0 0 4h3v4h-3a2 2 0 1 0 0 4v3h-4v-3a2 2 0 1 0-4 0v3H6v-4a2 2 0 1 0 0-4H3v-4h3a2 2 0 1 0 0-4H3V3h3v3a2 2 0 1 0 4 0Z" />
     </svg>
   ),
-  news: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-      <path d="M4 5h13v14H4z" />
-      <path d="M17 8h3v9a2 2 0 0 1-2 2h-1" />
-      <path d="M7 9h7M7 12h7M7 15h5" />
-    </svg>
-  ),
   changelog: (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
       <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
