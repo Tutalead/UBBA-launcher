@@ -1,39 +1,6 @@
 import { useEffect, useState } from 'react';
 import Panel from '../components/Panel';
 
-// Minimal markdown → HTML renderer (handles the subset used in patch notes).
-function renderMarkdown(text) {
-  const lines = text.split(/\r?\n/);
-  const out = [];
-  let inList = false;
-
-  for (const raw of lines) {
-    const line = raw.trimEnd();
-
-    if (/^###\s+/.test(line)) {
-      if (inList) { out.push('</ul>'); inList = false; }
-      out.push(`<h4 class="gothic uppercase text-[11px] tracking-widest text-brass-300 mt-3 mb-1">${line.replace(/^###\s+/, '')}</h4>`);
-    } else if (/^##\s+/.test(line)) {
-      if (inList) { out.push('</ul>'); inList = false; }
-      out.push(`<h3 class="gothic uppercase text-sm tracking-widest text-bone-200 mt-4 mb-1">${line.replace(/^##\s+/, '')}</h3>`);
-    } else if (/^#\s+/.test(line)) {
-      if (inList) { out.push('</ul>'); inList = false; }
-      out.push(`<h2 class="gothic uppercase tracking-widest text-base text-bone-100 mb-2">${line.replace(/^#\s+/, '')}</h2>`);
-    } else if (/^-\s+/.test(line)) {
-      if (!inList) { out.push('<ul class="list-disc list-inside space-y-0.5 text-bone-300 text-sm pl-2">'); inList = true; }
-      out.push(`<li>${line.replace(/^-\s+/, '')}</li>`);
-    } else if (line === '') {
-      if (inList) { out.push('</ul>'); inList = false; }
-      out.push('<div class="h-1"></div>');
-    } else {
-      if (inList) { out.push('</ul>'); inList = false; }
-      out.push(`<p class="text-bone-300 text-sm">${line}</p>`);
-    }
-  }
-  if (inList) out.push('</ul>');
-  return out.join('\n');
-}
-
 export default function ChangelogPage() {
   const [entries, setEntries] = useState(null);
   const [error, setError] = useState(null);
@@ -94,12 +61,32 @@ export default function ChangelogPage() {
           ))}
         </div>
 
-        {/* Patch notes content */}
-        <Panel className="flex-1 min-h-0 overflow-y-auto" title={`v${current.version} — ${current.title}`}>
-          {current.content
-            ? <div dangerouslySetInnerHTML={{ __html: renderMarkdown(current.content) }} />
-            : <p className="gothic uppercase text-[11px] tracking-widest text-bone-500">No patch notes available.</p>
-          }
+        {/* Entry details */}
+        <Panel className="flex-1 min-h-0 overflow-y-auto" title={current.title}>
+          <div className="flex flex-col gap-4">
+            {current.date && (
+              <div className="flex items-center gap-2 text-[11px] gothic uppercase tracking-widest text-bone-400">
+                <span>Released:</span><span className="text-bone-200">{current.date}</span>
+              </div>
+            )}
+            {current.pages && (
+              <div className="flex items-center gap-2 text-[11px] gothic uppercase tracking-widest text-bone-400">
+                <span>Pages:</span><span className="text-bone-200">{current.pages}</span>
+              </div>
+            )}
+            {current.url
+              ? (
+                <button
+                  type="button"
+                  onClick={() => window.ubba.changelog.openUrl(current.url)}
+                  className="self-start px-4 py-2 border border-brass-500 text-brass-300 hover:text-brass-100 hover:border-brass-300 gothic uppercase text-[11px] tracking-widest transition-colors"
+                >
+                  Open Changelog ↗
+                </button>
+              )
+              : <p className="gothic uppercase text-[11px] tracking-widest text-bone-500">No changelog link available.</p>
+            }
+          </div>
         </Panel>
       </div>
     </div>

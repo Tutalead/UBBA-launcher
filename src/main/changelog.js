@@ -24,7 +24,9 @@ function parseIndex(text) {
 
     if (/^##\s+/.test(line)) {
       flush();
-      current = { title: line.replace(/^##\s+/, '').trim(), date: null, pages: null, url: null };
+      const title = line.replace(/^##\s+/, '').trim();
+      const verMatch = title.match(/(\d+\.\d+\.\d+)/);
+      current = { version: verMatch ? verMatch[1] : title, title, date: null, pages: null, url: null };
       continue;
     }
     if (!current) continue;
