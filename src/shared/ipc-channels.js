@@ -25,6 +25,11 @@ module.exports = Object.freeze({
   // Game
   GAME_LAUNCH: 'game:launch',
 
+  // Settings
+  SETTINGS_GET: 'settings:get',
+  SETTINGS_SET: 'settings:set',
+  SETTINGS_BROWSE_DIR: 'settings:browse-dir',
+
   // Misc
   APP_GET_VERSION: 'app:get-version',
   APP_OPEN_LOGS: 'app:open-logs',

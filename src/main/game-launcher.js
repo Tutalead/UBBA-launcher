@@ -6,13 +6,15 @@ const fs = require('fs');
 const path = require('path');
 
 const { log } = require('../shared/logger');
+const { getSettings } = require('./settings');
 
-// Resolve the Dawn of War install directory.
-// In dev the source lives at `<DoW>/UBBA-launcher/` so `../` is the game dir.
-// In prod the NSIS installer puts the launcher in a sub-folder of the DoW
-// directory (e.g. `<DoW>/UBBA Launcher/`), so we check the exe dir first
-// and then its parent — whichever contains the game executable wins.
+// Resolve the mod install directory.
+// Priority: 1) user-configured modDir from settings  2) auto-detect by finding
+// the game executable near the launcher.
 function findGameDir(executable) {
+  const stored = getSettings().modDir;
+  if (stored) return stored;
+
   const exeDir = app.isPackaged
     ? path.dirname(app.getPath('exe'))
     : path.resolve(app.getAppPath(), '..');
@@ -35,14 +37,22 @@ function findGameDir(executable) {
 function launchGame(gameConfig) {
   const { executable, modName, skipIntro = true, extraArgs = [] } = gameConfig;
 
-  const gameDir = findGameDir(executable);
-  if (!gameDir) {
-    const msg = `Could not locate ${executable} near the launcher.`;
-    log.error('[game] ' + msg);
-    return { ok: false, error: msg };
+  // Prefer the explicit exe path from settings; fall back to modDir + executable name.
+  const settings = getSettings();
+  let exePath = settings.gameExePath || null;
+  let gameDir;
+  if (exePath) {
+    gameDir = path.dirname(exePath);
+  } else {
+    gameDir = findGameDir(executable);
+    if (!gameDir) {
+      const msg = `Could not locate ${executable}. Please set the game executable path in Settings.`;
+      log.error('[game] ' + msg);
+      return { ok: false, error: msg };
+    }
+    exePath = path.join(gameDir, executable);
   }
 
-  const exePath = path.join(gameDir, executable);
   const args = ['-modname', modName];
   if (skipIntro) args.push('-nomovies');
   args.push(...extraArgs);

@@ -26,6 +26,9 @@ const CH = Object.freeze({
   APP_OPEN_LOGS: 'app:open-logs',
   CHANGELOG_GET: 'changelog:get',
   OPEN_URL: 'app:open-url',
+  SETTINGS_GET: 'settings:get',
+  SETTINGS_SET: 'settings:set',
+  SETTINGS_BROWSE_DIR: 'settings:browse-dir',
 });
 
 function on(channel, listener) {
@@ -63,6 +66,11 @@ const api = {
   changelog: {
     get: () => ipcRenderer.invoke(CH.CHANGELOG_GET),
     openUrl: (url) => ipcRenderer.invoke(CH.OPEN_URL, url),
+  },
+  settings: {
+    get: () => ipcRenderer.invoke(CH.SETTINGS_GET),
+    set: (data) => ipcRenderer.invoke(CH.SETTINGS_SET, data),
+    browseDir: (mode) => ipcRenderer.invoke(CH.SETTINGS_BROWSE_DIR, mode),
   },
 };
 

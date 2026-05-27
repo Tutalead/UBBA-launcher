@@ -9,10 +9,12 @@ import LauncherUpdateBanner from './components/LauncherUpdateBanner.jsx';
 
 import HomePage from './pages/HomePage.jsx';
 import ChangelogPage from './pages/ChangelogPage.jsx';
+import SettingsPage from './pages/SettingsPage.jsx';
 
 const PAGES = {
   home: { label: 'HOME', component: HomePage },
   changelog: { label: 'CHANGELOG', component: ChangelogPage },
+  settings: { label: 'SETTINGS', component: SettingsPage },
 };
 
 export default function App() {

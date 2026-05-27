@@ -1,11 +1,12 @@
 'use strict';
 
-const { app, BrowserWindow, Menu, ipcMain, shell } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, shell, dialog } = require('electron');
 const path = require('path');
 
 const config = require('../shared/config');
 const CH = require('../shared/ipc-channels');
 const { configureLogger, log } = require('../shared/logger');
+const { getSettings, saveSettings } = require('./settings');
 
 const LauncherUpdater = require('./updater/launcher-updater');
 const ModUpdater = require('./updater/mod-updater');
@@ -130,6 +131,36 @@ function registerIpc() {
   ipcMain.handle(CH.MOD_STATUS, () => modUpdater.status());
 
   ipcMain.handle(CH.GAME_LAUNCH, () => launchGame(config.game));
+
+  ipcMain.handle(CH.SETTINGS_GET, () => getSettings());
+  ipcMain.handle(CH.SETTINGS_SET, (_e, data) => {
+    // Only allow known keys to be saved
+    const allowed = {};
+    if (typeof data.modDir === 'string' || data.modDir === null) {
+      allowed.modDir = data.modDir || null;
+    }
+    if (typeof data.gameExePath === 'string' || data.gameExePath === null) {
+      allowed.gameExePath = data.gameExePath || null;
+    }
+    return saveSettings(allowed);
+  });
+  ipcMain.handle(CH.SETTINGS_BROWSE_DIR, async (_e, mode) => {
+    if (mode === 'file') {
+      const result = await dialog.showOpenDialog(mainWindow, {
+        title: 'Select Game Executable (W40k.exe)',
+        filters: [{ name: 'Executable', extensions: ['exe'] }],
+        properties: ['openFile'],
+      });
+      if (result.canceled || !result.filePaths.length) return null;
+      return result.filePaths[0];
+    }
+    const result = await dialog.showOpenDialog(mainWindow, {
+      title: 'Select Mod Install Directory',
+      properties: ['openDirectory'],
+    });
+    if (result.canceled || !result.filePaths.length) return null;
+    return result.filePaths[0];
+  });
 
   ipcMain.handle(CH.CHANGELOG_GET, () => {
     const gameDir = require('./game-launcher').findGameDir(config.game.executable);
