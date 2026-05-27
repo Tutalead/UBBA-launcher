@@ -15,6 +15,7 @@ const CH = Object.freeze({
   LAUNCHER_EVENT: 'launcher:event',
   MOD_CHECK: 'mod:check-update',
   MOD_UPDATE: 'mod:install-update',
+  MOD_DELETE: 'mod:delete',
   MOD_STATUS: 'mod:get-status',
   MOD_EVENT: 'mod:event',
   WINDOW_MINIMIZE: 'window:minimize',
@@ -52,6 +53,7 @@ const api = {
     check: () => ipcRenderer.invoke(CH.MOD_CHECK),
     update: () => ipcRenderer.invoke(CH.MOD_UPDATE),
     status: () => ipcRenderer.invoke(CH.MOD_STATUS),
+    delete: () => ipcRenderer.invoke(CH.MOD_DELETE),
     onEvent: (cb) => on(CH.MOD_EVENT, cb),
   },
   window: {

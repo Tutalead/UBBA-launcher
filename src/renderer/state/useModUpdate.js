@@ -7,6 +7,7 @@ export function useModUpdate() {
     stage: 'idle',
     message: '',
     percent: 0,
+    indeterminate: false,
     installedVersion: null,
     latestVersion: null,
     hasUpdate: false,
@@ -57,13 +58,20 @@ export function useModUpdate() {
               message: `Mod up to date (v${evt.version})`,
               percent: 100,
             };
-          case 'downloading':
+          case 'downloading': {
+            const unknownTotal = !evt.total || evt.total === 0;
+            const pct = unknownTotal ? 0 : (evt.percent || 0);
+            const mb = evt.transferred ? (evt.transferred / 1048576).toFixed(1) : '0';
             return {
               ...s,
               stage: 'downloading',
-              percent: evt.percent || 0,
-              message: `Downloading mod v${evt.version}… ${(evt.percent || 0).toFixed(1)}%`,
+              percent: pct,
+              indeterminate: unknownTotal,
+              message: unknownTotal
+                ? `Downloading mod v${evt.version}\u2026 ${mb} MB`
+                : `Downloading mod v${evt.version}\u2026 ${pct.toFixed(1)}%`,
             };
+          }
           case 'extracting': {
             const pct = typeof evt.percent === 'number' ? evt.percent : 0;
             return {
@@ -94,6 +102,8 @@ export function useModUpdate() {
             };
           case 'error':
             return { ...s, stage: 'error', message: 'Mod update error: ' + evt.message };
+          case 'idle':
+            return { ...s, stage: 'idle', installedVersion: null, hasUpdate: false, percent: 0, message: evt.message || '' };
           default:
             return s;
         }
@@ -106,5 +116,6 @@ export function useModUpdate() {
     state,
     check: () => window.ubba?.mod.check(),
     update: () => window.ubba?.mod.update(),
+    isInstalled: !!state.installedVersion,
   };
 }

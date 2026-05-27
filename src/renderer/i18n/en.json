@@ -1,0 +1,61 @@
+{
+  "sidebar": {
+    "home": "HOME",
+    "changelog": "CHANGELOG",
+    "settings": "SETTINGS"
+  },
+  "titleBar": {
+    "title": "UBBA LAUNCHER by NinjaCat"
+  },
+  "action": {
+    "play": "Play Game",
+    "launching": "Launching…",
+    "update": "Update",
+    "install": "Install",
+    "updating": "Updating…",
+    "restart": "Restart",
+    "updateAddon": "Update Addon",
+    "failedToLaunch": "Failed to launch game.",
+    "menuCheckUpdates": "Check for Updates",
+    "menuDeleteAddon": "Delete Addon",
+    "deleteConfirm": "Are you sure you want to delete the addon? All mod files will be removed.",
+    "deleteSuccess": "Addon deleted.",
+    "deleteFailed": "Failed to delete addon."
+  },
+  "launcherBanner": {
+    "label": "Launcher"
+  },
+  "launcherBannerButton": {
+    "restartInstall": "Restart & install",
+    "updating": "Updating…",
+    "update": "Update"
+  },
+  "changelog": {
+    "title": "Changelog",
+    "loading": "Loading…",
+    "released": "Released:",
+    "pages": "Pages:",
+    "readMore": "Read more on GitHub",
+    "noContent": "No changelog content.",
+    "failedToLoad": "Failed to load changelog."
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "languageDesc": "Select the launcher interface language.",
+    "modDir": "Mod Install Directory",
+    "modDirDesc": "Folder where mod files (UBBA, addon_data, etc.) will be installed. Leave empty to auto-detect from the launcher location.",
+    "gameExe": "Game Executable (W40k.exe)",
+    "gameExeDesc": "Full path to the game executable used to launch the game. Leave empty to auto-detect from the launcher location.",
+    "autoDetect": "Auto-detect",
+    "browse": "Browse…",
+    "save": "Save",
+    "saved": "Saved ✓"
+  },
+  "bottomBar": {
+    "discord": "UBBA Discord Server"
+  },
+  "rightRail": {
+    "launcher": "Launcher"
+  }
+}

@@ -128,6 +128,7 @@ function registerIpc() {
 
   ipcMain.handle(CH.MOD_CHECK, () => modUpdater.check());
   ipcMain.handle(CH.MOD_UPDATE, () => modUpdater.update());
+  ipcMain.handle(CH.MOD_DELETE, () => modUpdater.delete());
   ipcMain.handle(CH.MOD_STATUS, () => modUpdater.status());
 
   ipcMain.handle(CH.GAME_LAUNCH, () => launchGame(config.game));
@@ -141,6 +142,9 @@ function registerIpc() {
     }
     if (typeof data.gameExePath === 'string' || data.gameExePath === null) {
       allowed.gameExePath = data.gameExePath || null;
+    }
+    if (data.language === 'en' || data.language === 'ru') {
+      allowed.language = data.language;
     }
     return saveSettings(allowed);
   });

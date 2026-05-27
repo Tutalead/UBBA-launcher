@@ -13,6 +13,7 @@ module.exports = Object.freeze({
   // Mod (addon) update
   MOD_CHECK: 'mod:check-update',
   MOD_UPDATE: 'mod:install-update',
+  MOD_DELETE: 'mod:delete',
   MOD_STATUS: 'mod:get-status',
   MOD_EVENT: 'mod:event', // main -> renderer status stream
 

@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import i18n from './i18n/i18n.js';
 import TitleBar from './components/TitleBar.jsx';
 import Frame from './components/Frame.jsx';
 import Sidebar from './components/Sidebar.jsx';
@@ -20,10 +22,19 @@ const PAGES = {
 export default function App() {
   const [active, setActive] = useState('home');
   const [appVersion, setAppVersion] = useState('');
+  const { t } = useTranslation();
 
   useEffect(() => {
     window.ubba?.app.getVersion().then(setAppVersion).catch(() => {});
+    window.ubba?.settings.get().then((s) => {
+      if (s?.language) i18n.changeLanguage(s.language);
+    }).catch(() => {});
   }, []);
+
+  const sidebarItems = Object.entries(PAGES).map(([key, v]) => ({
+    key,
+    label: t(`sidebar.${key}`, v.label),
+  }));
 
   const Page = PAGES[active].component;
 
@@ -36,7 +47,7 @@ export default function App() {
 
           <div className="flex flex-1 min-h-0">
             <Sidebar
-              items={Object.entries(PAGES).map(([key, v]) => ({ key, label: v.label }))}
+              items={sidebarItems}
               active={active}
               onSelect={setActive}
             />

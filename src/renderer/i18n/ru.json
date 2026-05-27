@@ -1,0 +1,61 @@
+{
+  "sidebar": {
+    "home": "ГЛАВНАЯ",
+    "changelog": "ИСТОРИЯ",
+    "settings": "НАСТРОЙКИ"
+  },
+  "titleBar": {
+    "title": "UBBA LAUNCHER by NinjaCat"
+  },
+  "action": {
+    "play": "Играть",
+    "launching": "Запуск…",
+    "update": "Обновить",
+    "install": "Установить",
+    "updating": "Обновление…",
+    "restart": "Перезапуск",
+    "updateAddon": "Обновить аддон",
+    "failedToLaunch": "Не удалось запустить игру.",
+    "menuCheckUpdates": "Проверить обновления",
+    "menuDeleteAddon": "Удалить аддон",
+    "deleteConfirm": "Вы уверены, что хотите удалить аддон? Все файлы мода будут удалены.",
+    "deleteSuccess": "Аддон удалён.",
+    "deleteFailed": "Не удалось удалить аддон."
+  },
+  "launcherBanner": {
+    "label": "Лаунчер"
+  },
+  "launcherBannerButton": {
+    "restartInstall": "Перезапустить и установить",
+    "updating": "Обновление…",
+    "update": "Обновить"
+  },
+  "changelog": {
+    "title": "История изменений",
+    "loading": "Загрузка…",
+    "released": "Выпущено:",
+    "pages": "Страниц:",
+    "readMore": "Подробнее",
+    "noContent": "Содержимое отсутствует.",
+    "failedToLoad": "Не удалось загрузить историю изменений."
+  },
+  "settings": {
+    "title": "Настройки",
+    "language": "Язык",
+    "languageDesc": "Выберите язык интерфейса лаунчера.",
+    "modDir": "Папка установки мода",
+    "modDirDesc": "Папка, в которую будут устанавливаться файлы мода (UBBA, addon_data и т.д.). Оставьте пустым для автоопределения.",
+    "gameExe": "EXE файл игры (W40k.exe)",
+    "gameExeDesc": "Полный путь к exe файлу игры. Оставьте пустым для автоопределения.",
+    "autoDetect": "Авто",
+    "browse": "Обзор…",
+    "save": "Сохранить",
+    "saved": "Сохранено ✓"
+  },
+  "bottomBar": {
+    "discord": "Discord сервер UBBA"
+  },
+  "rightRail": {
+    "launcher": "Лаунчер"
+  }
+}

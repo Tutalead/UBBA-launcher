@@ -117,6 +117,21 @@ class ModUpdater extends EventEmitter {
     }
   }
 
+  async delete() {
+    if (this._busy) return { ok: false, error: 'Mod update already in progress.' };
+    const gameDir = findGameDir(this.gameConfig.executable);
+    if (!gameDir) return { ok: false, error: 'Game directory not found.' };
+    try {
+      for (const entry of this.config.entries) {
+        await fsp.rm(path.join(gameDir, entry), { recursive: true, force: true });
+      }
+      this._emit('idle', { message: 'Addon deleted.' });
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, error: err.message || String(err) };
+    }
+  }
+
   // ---------- internals ----------
 
   // The mod is considered installed when the configured version file exists
