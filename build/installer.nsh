@@ -9,7 +9,6 @@ Var DesktopCheckboxState
 !macroend
 
 Function DesktopShortcutPage
-  !insertmacro MUI_HEADER_TEXT "Install Options" "Choose additional installation options."
   nsDialogs::Create 1018
   Pop $0
 
