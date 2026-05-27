@@ -97,9 +97,10 @@
       "perMachine": false,
       "allowToChangeInstallationDirectory": true,
       "deleteAppDataOnUninstall": false,
-      "createDesktopShortcut": true,
+      "createDesktopShortcut": false,
       "createStartMenuShortcut": true,
-      "shortcutName": "UBBA Launcher"
+      "shortcutName": "UBBA Launcher",
+      "include": "build/installer.nsh"
     },
     "publish": [
       {
