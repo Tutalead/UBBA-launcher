@@ -57,10 +57,13 @@
       "output": "dist",
       "buildResources": "build"
     },
+    "icon": "src/renderer/assets/ICON.png",
     "files": [
       "src/main/**/*",
       "src/preload/**/*",
       "src/shared/**/*",
+      "src/renderer/assets/ICON.png",
+      "src/renderer/assets/ICON.ico",
       "dist-renderer/**/*",
       "package.json"
     ],
@@ -91,7 +94,6 @@
     "nsis": {
       "oneClick": false,
       "perMachine": false,
-      "multiUserInstallation": false,
       "allowToChangeInstallationDirectory": true,
       "deleteAppDataOnUninstall": false,
       "createDesktopShortcut": true,

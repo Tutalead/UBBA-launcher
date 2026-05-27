@@ -40,6 +40,7 @@ function createWindow() {
     titleBarStyle: 'hidden',      // macOS: keep traffic-lights hidden too
     autoHideMenuBar: true,
     backgroundColor: '#0b0a09',
+    icon: path.join(__dirname, '..', 'renderer', 'assets', 'ICON.png'),
     show: false,
     webPreferences: {
       preload: path.join(__dirname, '..', 'preload', 'index.js'),
