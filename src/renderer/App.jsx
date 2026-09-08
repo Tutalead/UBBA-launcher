@@ -53,7 +53,7 @@ export default function App() {
             />
 
             <Backdrop>
-              <div className="flex-1 min-h-0 px-6 pt-6 pb-4 overflow-y-auto">
+              <div className={`flex-1 min-h-0 px-6 pt-6 pb-4 ${active === 'home' ? 'overflow-y-hidden' : 'overflow-y-auto'}`}>
                 <Page />
               </div>
             </Backdrop>

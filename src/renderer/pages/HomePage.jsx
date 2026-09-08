@@ -2,7 +2,7 @@ import ActionColumn from '../components/ActionColumn.jsx';
 
 export default function HomePage() {
   return (
-    <div className="h-full flex flex-col justify-end items-end gap-2">
+    <div className="h-full flex flex-col justify-end gap-2">
       <ActionColumn />
     </div>
   );

@@ -120,14 +120,26 @@ export default function ActionColumn() {
             indeterminate={!isDownloading && !isReady}
           />
         </div>
-        <Button
-          variant="primary"
-          className="h-20 w-40 text-2xl leading-none shrink-0"
-          disabled={!isReady}
-          onClick={isReady ? installLauncher : undefined}
-        >
-          {isReady ? t('launcherBannerButton.restartInstall') : isDownloading ? t('launcherBannerButton.updating') : t('launcherBannerButton.update')}
-        </Button>
+        <div className="relative flex shrink-0 h-20">
+          <Button
+            variant="primary"
+            className="h-full px-8 text-2xl leading-none"
+            disabled={!isReady}
+            onClick={isReady ? installLauncher : undefined}
+          >
+            {isReady ? t('launcherBannerButton.restartInstall') : isDownloading ? t('launcherBannerButton.updating') : t('launcherBannerButton.update')}
+          </Button>
+          <div className="w-px bg-black/40 self-stretch shrink-0" />
+          <button
+            type="button"
+            className="h-full w-12 flex items-center justify-center bg-rust-button text-bone-100 border border-l-0 border-black/70 shadow-plate opacity-50 cursor-not-allowed"
+            disabled
+            aria-hidden="true"
+            tabIndex={-1}
+          >
+            <GearIcon />
+          </button>
+        </div>
       </div>
     );
   }
