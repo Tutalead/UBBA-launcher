@@ -34,8 +34,8 @@ const config = {
       },
       'ubba-dev': {
         owner: process.env.UBBA_DEV_MOD_OWNER || 'Tutalead',
-        repo: process.env.UBBA_DEV_MOD_REPO || 'UBBA-DEV-PUBLIC',
-        entries: ['UBBADEV.module', 'UBBA-DEV', 'UBBA-DEV_data'],
+        repo: process.env.UBBA_DEV_MOD_REPO || 'UBBA-DEV-PUBLIC-GIT',
+        entries: ['UBBADEVPUBLIC.module', 'UBBA-DEV-PUBLIC', 'UBBA-DEV_data'],
         versionFile: 'UBBA-DEV_data/version.md',
       },
     },
@@ -70,7 +70,7 @@ const config = {
     // Per-mode modname override based on selected mode in launcher settings.
     modNameByMode: {
       ubba: 'UBBA',
-      'ubba-dev': 'UBBA-DEV',
+      'ubba-dev': 'UBBADEVPUBLIC',
     },
     // Skip the Relic/THQ intro movies on startup.
     skipIntro: true,

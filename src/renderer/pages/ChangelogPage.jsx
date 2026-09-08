@@ -11,10 +11,12 @@ export default function ChangelogPage() {
   useEffect(() => {
     window.ubba?.changelog.get()
       .then((result) => {
-        if (result.error && !result.entries.length) {
+        const safeEntries = Array.isArray(result?.entries) ? result.entries : [];
+        if (result?.error && safeEntries.length === 0) {
           setError(result.error);
         } else {
-          setEntries(result.entries);
+          setEntries(safeEntries);
+          setSelected(0);
         }
       })
       .catch((e) => setError(e?.message || t('changelog.failedToLoad')));
@@ -32,6 +34,14 @@ export default function ChangelogPage() {
     return (
       <div className="h-full flex items-center justify-center">
         <p className="gothic uppercase text-[11px] tracking-widest text-bone-500 animate-pulse">{t('changelog.loading')}</p>
+      </div>
+    );
+  }
+
+  if (entries.length === 0) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <p className="gothic uppercase text-[11px] tracking-widest text-bone-500">{t('changelog.noContent')}</p>
       </div>
     );
   }
