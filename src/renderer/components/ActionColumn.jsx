@@ -8,6 +8,8 @@ import { useLauncherUpdate } from '../state/useLauncherUpdate.js';
 export default function ActionColumn() {
   const [launching, setLaunching] = useState(false);
   const [launchError, setLaunchError] = useState(null);
+  const [developerMode, setDeveloperMode] = useState(false);
+  const [selectedMode, setSelectedMode] = useState('ubba');
   const { state: mod, check: checkMod, update: updateMod, isInstalled } = useModUpdate();
   const { state: launcher, install: installLauncher } = useLauncherUpdate();
   const { t } = useTranslation();
@@ -26,6 +28,22 @@ export default function ActionColumn() {
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
   }, [menuOpen]);
+
+  useEffect(() => {
+    window.ubba?.settings.get().then((settings) => {
+      setDeveloperMode(!!settings?.developerMode);
+      if (settings?.selectedMod === 'ubba' || settings?.selectedMod === 'ubba-dev') {
+        setSelectedMode(settings.selectedMod);
+      }
+    }).catch(() => {});
+  }, []);
+
+  async function handleModeSelect(mode) {
+    setSelectedMode(mode);
+    window.ubba?.settings.set({ selectedMod: mode }).catch(() => {});
+    setMenuOpen(false);
+    await checkMod();
+  }
 
   async function handleCheckUpdates() {
     setMenuOpen(false);
@@ -83,17 +101,19 @@ export default function ActionColumn() {
       ? 100
       : 0;
   const indeterminate = modBusy && !progressStages.includes(mod.stage);
+  const selectedModeLabel = selectedMode === 'ubba-dev' ? t('home.ubbaDev') : t('home.ubba');
 
   if (launcherNeedsAttention) {
     const isDownloading = launcher.stage === 'downloading';
     const isReady = launcher.stage === 'downloaded';
     return (
-      <div className="flex flex-row gap-4 items-stretch w-full">
-        <div className="plate p-3 flex flex-col gap-2 flex-1 justify-center backdrop-blur-sm bg-ink-800/70">
+      <div className="flex flex-row gap-4 items-stretch w-full min-w-0">
+        <div className="plate p-3 flex flex-col gap-2 flex-1 min-w-0 justify-center backdrop-blur-sm bg-ink-800/70">
           <div className="flex items-center justify-between gap-3">
-            <span className="gothic uppercase text-[11px] tracking-widest text-bone-300 truncate">
+            <span className="gothic uppercase text-[11px] tracking-widest text-bone-300 flex-1 min-w-0 truncate">
               {launcher.message}
             </span>
+            {developerMode && <ModeBadge mode={selectedMode} label={selectedModeLabel} />}
           </div>
           <ProgressLabel
             value={Math.round(launcher.percent || 0)}
@@ -113,12 +133,13 @@ export default function ActionColumn() {
   }
 
   return (
-    <div className="flex flex-row gap-4 items-stretch w-full">
-      <div className="plate p-3 flex flex-col gap-2 flex-1 justify-center backdrop-blur-sm bg-ink-800/70">
+    <div className="flex flex-row gap-4 items-stretch w-full min-w-0">
+      <div className="plate p-3 flex flex-col gap-2 flex-1 min-w-0 justify-center backdrop-blur-sm bg-ink-800/70">
         <div className="flex items-center justify-between gap-3">
-          <span className="gothic uppercase text-[11px] tracking-widest text-bone-300 truncate">
+          <span className="gothic uppercase text-[11px] tracking-widest text-bone-300 flex-1 min-w-0 truncate">
             {label}
           </span>
+          {developerMode && <ModeBadge mode={selectedMode} label={selectedModeLabel} />}
         </div>
         {modBusy && <ProgressLabel value={Math.round(progress)} indeterminate={indeterminate || (mod.stage === 'downloading' && mod.indeterminate)} />}
       </div>
@@ -149,6 +170,20 @@ export default function ActionColumn() {
         </button>
         {menuOpen && (
           <div className="absolute bottom-full right-0 mb-1 min-w-[180px] bg-ink-800 border border-white/10 shadow-xl z-50 flex flex-col py-1">
+            {developerMode && (
+              <>
+                <div className="px-4 pt-1 pb-1 gothic uppercase text-[10px] tracking-widest text-bone-500">
+                  {t('home.mode')}
+                </div>
+                <MenuButton onClick={() => handleModeSelect('ubba')} active={selectedMode === 'ubba'}>
+                  {t('home.ubba')}
+                </MenuButton>
+                <MenuButton onClick={() => handleModeSelect('ubba-dev')} active={selectedMode === 'ubba-dev'}>
+                  {t('home.ubbaDev')}
+                </MenuButton>
+                <div className="border-t border-white/10 my-1" />
+              </>
+            )}
             <MenuButton onClick={handleCheckUpdates}>{t('action.menuCheckUpdates')}</MenuButton>
             <div className="border-t border-white/10 my-1" />
             <MenuButton onClick={handleDeleteAddon} danger>{t('action.menuDeleteAddon')}</MenuButton>
@@ -156,6 +191,22 @@ export default function ActionColumn() {
         )}
       </div>
     </div>
+  );
+}
+
+function ModeBadge({ mode, label }) {
+  const isDev = mode === 'ubba-dev';
+  return (
+    <span
+      className={`shrink-0 px-2 py-1 rounded-sm border gothic uppercase text-[10px] tracking-widest ${
+        isDev
+          ? 'border-red-500/60 bg-red-900/30 text-red-300'
+          : 'border-emerald-500/50 bg-emerald-900/25 text-emerald-300'
+      }`}
+      title={`Selected mode: ${label}`}
+    >
+      {label}
+    </span>
   );
 }
 
@@ -181,16 +232,23 @@ function GearIcon() {
   );
 }
 
-function MenuButton({ onClick, danger, children }) {
+function MenuButton({ onClick, danger, active, children }) {
   return (
     <button
       type="button"
       onClick={onClick}
       className={`w-full text-left px-4 py-2 gothic uppercase text-[11px] tracking-widest transition-colors hover:bg-white/5 ${
-        danger ? 'text-red-400 hover:text-red-300' : 'text-bone-200 hover:text-bone-100'
+        danger
+          ? 'text-red-400 hover:text-red-300'
+          : active
+            ? 'text-brass-200 bg-rust-button/25 hover:text-brass-100'
+            : 'text-bone-200 hover:text-bone-100'
       }`}
     >
-      {children}
+      <span className="inline-flex items-center gap-2">
+        <span>{children}</span>
+        {active && <span className="w-1.5 h-1.5 rounded-full bg-brass-300" />}
+      </span>
     </button>
   );
 }

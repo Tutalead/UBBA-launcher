@@ -4,6 +4,11 @@
     "changelog": "ИСТОРИЯ",
     "settings": "НАСТРОЙКИ"
   },
+  "home": {
+    "mode": "Режим",
+    "ubba": "UBBA",
+    "ubbaDev": "UBBA Dev"
+  },
   "titleBar": {
     "title": "UBBA LAUNCHER by NinjaCat"
   },
@@ -47,6 +52,8 @@
     "modDirDesc": "Папка, в которую будут устанавливаться файлы мода (UBBA, addon_data и т.д.). Оставьте пустым для автоопределения.",
     "gameExe": "EXE файл игры (W40k.exe)",
     "gameExeDesc": "Полный путь к exe файлу игры. Оставьте пустым для автоопределения.",
+    "developerMode": "Режим разработчика",
+    "developerModeDesc": "Показывать выбор UBBA и UBBA Dev на главной странице.",
     "autoDetect": "Авто",
     "browse": "Обзор…",
     "save": "Сохранить",

@@ -35,11 +35,14 @@ function findGameDir(executable) {
 }
 
 function launchGame(gameConfig) {
-  const { executable, modName, skipIntro = true, extraArgs = [] } = gameConfig;
+  const { executable, modName, modNameByMode = {}, skipIntro = true, extraArgs = [] } = gameConfig;
 
   // Prefer the explicit exe path from settings; fall back to modDir + executable name.
   const settings = getSettings();
   let exePath = settings.gameExePath || null;
+  const selectedMode = settings.selectedMod;
+  const resolvedModName =
+    (selectedMode && modNameByMode && modNameByMode[selectedMode]) || modName;
   let gameDir;
   if (exePath) {
     gameDir = path.dirname(exePath);
@@ -53,11 +56,11 @@ function launchGame(gameConfig) {
     exePath = path.join(gameDir, executable);
   }
 
-  const args = ['-modname', modName];
+  const args = ['-modname', resolvedModName];
   if (skipIntro) args.push('-nomovies');
   args.push(...extraArgs);
 
-  log.info('[game] launching', { exePath, args, cwd: gameDir });
+  log.info('[game] launching', { exePath, args, cwd: gameDir, selectedMode });
 
   try {
     const child = spawn(exePath, args, {
@@ -68,7 +71,7 @@ function launchGame(gameConfig) {
     });
     child.on('error', (err) => log.error('[game] spawn error:', err));
     child.unref();
-    return { ok: true, pid: child.pid, exePath, args };
+    return { ok: true, pid: child.pid, exePath, args, selectedMode };
   } catch (err) {
     log.error('[game] failed to launch:', err);
     return { ok: false, error: String(err && err.message ? err.message : err) };

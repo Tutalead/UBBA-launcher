@@ -111,6 +111,17 @@ function broadcast(channel, payload) {
   }
 }
 
+function resolveChangelogConfig(changelogConfig, selectedMode) {
+  if (changelogConfig?.profiles && Object.keys(changelogConfig.profiles).length) {
+    const fallbackMode = changelogConfig.defaultMode || 'ubba';
+    const mode = selectedMode && changelogConfig.profiles[selectedMode]
+      ? selectedMode
+      : fallbackMode;
+    return changelogConfig.profiles[mode] || changelogConfig.profiles[fallbackMode];
+  }
+  return changelogConfig;
+}
+
 function registerIpc() {
   ipcMain.handle(CH.LAUNCHER_CHECK, () => launcherUpdater.check());
   ipcMain.handle(CH.LAUNCHER_DOWNLOAD, () => launcherUpdater.download());
@@ -146,6 +157,12 @@ function registerIpc() {
     if (data.language === 'en' || data.language === 'ru') {
       allowed.language = data.language;
     }
+    if (typeof data.developerMode === 'boolean') {
+      allowed.developerMode = data.developerMode;
+    }
+    if (data.selectedMod === 'ubba' || data.selectedMod === 'ubba-dev') {
+      allowed.selectedMod = data.selectedMod;
+    }
     return saveSettings(allowed);
   });
   ipcMain.handle(CH.SETTINGS_BROWSE_DIR, async (_e, mode) => {
@@ -169,7 +186,9 @@ function registerIpc() {
   ipcMain.handle(CH.CHANGELOG_GET, () => {
     const gameDir = require('./game-launcher').findGameDir(config.game.executable);
     if (!gameDir) return { entries: [], error: 'Game directory not found.' };
-    return getChangelog({ gameDir, changelogConfig: config.changelog });
+    const selectedMode = getSettings().selectedMod;
+    const changelogConfig = resolveChangelogConfig(config.changelog, selectedMode);
+    return getChangelog({ gameDir, changelogConfig });
   });
 
   // Window controls — driven from the custom titlebar.

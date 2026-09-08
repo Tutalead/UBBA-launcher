@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import i18n from '../i18n/i18n.js';
 import Button from '../components/Button.jsx';
+import Checkbox from '../components/Checkbox.jsx';
 
 export default function SettingsPage() {
   const [modDir, setModDir] = useState('');
   const [gameExePath, setGameExePath] = useState('');
   const [language, setLanguage] = useState('en');
+  const [developerMode, setDeveloperMode] = useState(false);
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
@@ -16,6 +18,7 @@ export default function SettingsPage() {
       setModDir(s?.modDir || '');
       setGameExePath(s?.gameExePath || '');
       setLanguage(s?.language || 'en');
+      setDeveloperMode(!!s?.developerMode);
       setLoading(false);
     });
   }, []);
@@ -30,11 +33,17 @@ export default function SettingsPage() {
     if (file) { setGameExePath(file); setSaved(false); }
   }
 
+  function handleDeveloperModeChange(checked) {
+    setDeveloperMode(checked);
+    window.ubba?.settings.set({ developerMode: checked }).catch(() => {});
+  }
+
   async function handleSave() {
     await window.ubba?.settings.set({
       modDir: modDir || null,
       gameExePath: gameExePath || null,
       language,
+      developerMode,
     });
     i18n.changeLanguage(language);
     setSaved(true);
@@ -70,6 +79,17 @@ export default function SettingsPage() {
               </button>
             ))}
           </div>
+        </div>
+
+        <div className="border-t border-white/5" />
+
+        <div>
+          <Checkbox
+            label={t('settings.developerMode')}
+            checked={developerMode}
+            onChange={handleDeveloperModeChange}
+          />
+          <p className="text-[11px] text-bone-500 mt-2">{t('settings.developerModeDesc')}</p>
         </div>
 
         <div className="border-t border-white/5" />
