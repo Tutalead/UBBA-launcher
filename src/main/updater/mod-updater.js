@@ -42,6 +42,9 @@ class ModUpdater extends EventEmitter {
     this.log = log.scope ? log.scope('mod-updater') : log;
     this._busy = false;
     this._latestByMode = Object.create(null); // mode -> last release info from GitHub
+    this._latestFetchedAtByMode = Object.create(null);
+    this._checkPromiseByMode = Object.create(null);
+    this._stopped = true;
   }
 
   _emit(stage, data = {}) {
@@ -51,16 +54,30 @@ class ModUpdater extends EventEmitter {
   // ---------- public API ----------
 
   startAutoCheck() {
-    this.check().catch((e) => this.log.warn('initial mod check failed', e));
-    this._timer = setInterval(
-      () => this.check().catch(() => {}),
-      this.config.checkIntervalMs
-    );
+    this.stopAutoCheck();
+    this._stopped = false;
+    const initialDelay = Math.floor(Math.random() * (this.config.startupJitterMs || 0));
+    this._timer = setTimeout(() => this._runAutoCheck(), initialDelay);
   }
 
   stopAutoCheck() {
-    if (this._timer) clearInterval(this._timer);
+    this._stopped = true;
+    if (this._timer) clearTimeout(this._timer);
     this._timer = null;
+  }
+
+  async _runAutoCheck() {
+    try {
+      await this.check();
+    } catch (err) {
+      this.log.warn('automatic mod check failed', err);
+    }
+    if (this._stopped) return;
+    const jitter = Math.floor(Math.random() * (this.config.checkJitterMs || 0));
+    this._timer = setTimeout(
+      () => this._runAutoCheck(),
+      this.config.checkIntervalMs + jitter
+    );
   }
 
   async status() {
@@ -84,12 +101,7 @@ class ModUpdater extends EventEmitter {
     const profile = this._getProfile(mode);
     this._emit('checking', { mode });
     try {
-      const latest = await fetchLatestRelease({
-        owner: profile.owner,
-        repo: profile.repo,
-        token: profile.token || this.config.token,
-      });
-      this._latestByMode[mode] = latest;
+      const latest = await this._fetchLatest(mode, profile);
       const installed = await this._readInstalled(profile);
       if (this._hasUpdate(installed, latest)) {
         this._emit('available', {
@@ -115,14 +127,7 @@ class ModUpdater extends EventEmitter {
     try {
       const mode = this._getSelectedMode();
       const profile = this._getProfile(mode);
-      const latest =
-        this._latestByMode[mode] ||
-        (await fetchLatestRelease({
-          owner: profile.owner,
-          repo: profile.repo,
-          token: profile.token || this.config.token,
-        }));
-      this._latestByMode[mode] = latest;
+      const latest = await this._fetchLatest(mode, profile);
 
       const gameDir = findGameDir(this.gameConfig.executable);
       if (!gameDir) {
@@ -176,6 +181,32 @@ class ModUpdater extends EventEmitter {
   }
 
   // ---------- internals ----------
+
+  async _fetchLatest(mode, profile) {
+    const cached = this._latestByMode[mode];
+    const fetchedAt = this._latestFetchedAtByMode[mode] || 0;
+    if (cached && Date.now() - fetchedAt < (this.config.checkCacheTtlMs || 0)) {
+      return cached;
+    }
+    if (this._checkPromiseByMode[mode]) return this._checkPromiseByMode[mode];
+
+    const request = fetchLatestRelease({
+      owner: profile.owner,
+      repo: profile.repo,
+      token: profile.token || this.config.token,
+      versionUrl: profile.versionUrl,
+    })
+      .then((latest) => {
+        this._latestByMode[mode] = latest;
+        this._latestFetchedAtByMode[mode] = Date.now();
+        return latest;
+      })
+      .finally(() => {
+        delete this._checkPromiseByMode[mode];
+      });
+    this._checkPromiseByMode[mode] = request;
+    return request;
+  }
 
   // The mod is considered installed when the configured version file exists
   // on disk. The file lives inside the mod itself (e.g. UBBA_data/version.md)

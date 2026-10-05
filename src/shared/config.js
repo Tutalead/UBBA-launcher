@@ -29,6 +29,9 @@ const config = {
       ubba: {
         owner: process.env.UBBA_MOD_OWNER || 'Tutalead',
         repo: process.env.UBBA_MOD_REPO || 'UBBA-PUBLIC',
+        versionUrl:
+          process.env.UBBA_MOD_VERSION_URL ||
+          'https://raw.githubusercontent.com/Tutalead/UBBA-PUBLIC/main/UBBA_data/version.md',
         entries: ['UBBA.module', 'UBBA', 'addon_data', 'UBBA_data'],
         versionFile: 'UBBA_data/version.md',
       },
@@ -39,8 +42,10 @@ const config = {
         versionFile: 'UBBA-DEV_data/version.md',
       },
     },
-    // How often to poll for new releases.
-    checkIntervalMs: 30 * 60 * 1000, // 30 min
+    checkCacheTtlMs: 5 * 60 * 1000,
+    startupJitterMs: 30 * 1000,
+    checkJitterMs: 5 * 60 * 1000,
+    checkIntervalMs: 4 * 60 * 60 * 1000, // 4 hours
   },
 
   // Changelog settings.

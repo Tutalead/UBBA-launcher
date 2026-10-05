@@ -1,7 +1,7 @@
 'use strict';
 
-const { USER_AGENT, httpGetJson, downloadToFile } = require('./http');
-const { normalizeVersion } = require('./versions');
+const { USER_AGENT, httpGetBuffer, httpGetJson, downloadToFile } = require('./http');
+const { normalizeVersion, parseVersionFile } = require('./versions');
 
 function apiHeaders(token) {
   const headers = {
@@ -23,7 +23,26 @@ function downloadHeaders(url, token) {
   return headers;
 }
 
-async function fetchLatestRelease({ owner, repo, token }) {
+async function fetchVersionFileRelease({ owner, repo, versionUrl }) {
+  const buffer = await httpGetBuffer(versionUrl, {
+    'User-Agent': USER_AGENT,
+    Accept: 'text/plain',
+  });
+  const version = parseVersionFile(buffer.toString('utf8'));
+  if (!version) throw new Error('Remote version file contains no valid version.');
+  const tag = `v${version}`;
+  return {
+    tag,
+    version,
+    name: tag,
+    zipUrl: `https://github.com/${owner}/${repo}/archive/refs/tags/${tag}.zip`,
+    publishedAt: null,
+    htmlUrl: `https://github.com/${owner}/${repo}/releases/tag/${tag}`,
+    body: '',
+  };
+}
+
+async function fetchGithubLatestRelease({ owner, repo, token }) {
   const url = `https://api.github.com/repos/${owner}/${repo}/releases/latest`;
   const json = await httpGetJson(url, apiHeaders(token));
   if (!json || !json.tag_name) throw new Error('GitHub returned no release tag.');
@@ -43,6 +62,11 @@ async function fetchLatestRelease({ owner, repo, token }) {
   };
 }
 
+async function fetchLatestRelease({ owner, repo, token, versionUrl }) {
+  if (versionUrl) return fetchVersionFileRelease({ owner, repo, versionUrl });
+  return fetchGithubLatestRelease({ owner, repo, token });
+}
+
 function downloadReleaseZip(url, destPath, { token, onProgress } = {}) {
   return downloadToFile(url, destPath, {
     headers: downloadHeaders(url, token),
@@ -50,4 +74,4 @@ function downloadReleaseZip(url, destPath, { token, onProgress } = {}) {
   });
 }
 
-module.exports = { fetchLatestRelease, downloadReleaseZip };
+module.exports = { fetchLatestRelease, downloadReleaseZip, fetchVersionFileRelease };
